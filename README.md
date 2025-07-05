@@ -1,217 +1,241 @@
-
-<!-- Generated: 2025-07-05 00:00:00 UTC -->
-
 # Quantalogic PyZeroX
 
-Quantalogic PyZeroX is a cross-platform toolkit for document processing and LLM-powered workflows, supporting both Python and Node.js. It enables rapid prototyping and deployment of AI-driven document pipelines.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
+[![Node.js](https://img.shields.io/badge/Node.js-16%2B-green.svg)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-4.5%2B-blue.svg)](https://www.typescriptlang.org/)
 
-## Key Entry Points
-- Python: `py_zerox/pyzerox/core/zerox.py`
-- Node.js: `node-zerox/src/index.ts`
-- Build configs: `pyproject.toml`, `package.json`, `Makefile`
+> **🚀 Maintained Fork:** This is a maintained fork of the original [ZeroX project](https://github.com/getomni-ai/zerox) by Omni AI, enhanced and actively maintained by Quantalogic. This version provides extended document processing and LLM-powered workflow capabilities, building on the original foundation with additional features, integrations, and improvements for both Python and Node.js environments.
 
-## Quick Build & Test
-- Python: `poetry install && poetry build && poetry run pytest py_zerox/tests/`
-- Node.js: `npm install && npx tsc && npm test`
-- Unified: `make` (see `Makefile`)
+**Quantalogic PyZeroX** is a cross-platform toolkit for document processing and LLM-powered workflows, supporting both Python and Node.js. It enables rapid prototyping and deployment of AI-driven document pipelines with support for multiple vision models and providers.
 
-## Documentation
-- [Project Overview](docs/project-overview.md): Purpose, stack, platform support
-- [Architecture](docs/architecture.md): System structure, data flow, key files
-- [Build System](docs/build-system.md): Build configs, workflows, troubleshooting
-- [Testing](docs/testing.md): Test types, commands, organization
-- [Development](docs/development.md): Code style, patterns, workflows
-- [Deployment](docs/deployment.md): Packaging, scripts, output locations
-- [Files Catalog](docs/files.md): File groups, entry points, dependencies
+**Maintained by [Quantalogic](https://www.quantalogic.app)** - A platform dedicated to advancing AI-powered document processing and workflow automation.
 
-For file locations and practical examples, see the [Files Catalog](docs/files.md).
+## 📋 Table of Contents
 
-(Node.js SDK - supports vision models from different providers like OpenAI, Azure OpenAI, Anthropic, AWS Bedrock, Google Gemini, etc.)
+- [✨ Features](#-features)
+- [🔧 Prerequisites](#-prerequisites)
+- [🚀 Quick Start](#-quick-start)
+- [📦 Installation](#-installation)
+- [📖 Usage](#-usage)
+  - [Node.js Usage](#nodejs-usage)
+  - [Python Usage](#python-usage)
+- [🎯 API Reference](#-api-reference)
+  - [Node.js API](#nodejs-api)
+  - [Python API](#python-api)
+- [🤖 Supported Models](#-supported-models)
+- [📄 Supported File Types](#-supported-file-types)
+- [💡 Examples](#-examples)
+- [🔧 Development](#-development)
+- [📚 Documentation](#-documentation)
+- [🤝 Contributing](#-contributing)
+- [📜 License](#-license)
 
-### Installation
+## ✨ Features
 
-```sh
-npm install zerox
+- **🌐 Multi-platform Support**: Works seamlessly with both Python and Node.js
+- **🤖 Multiple LLM Providers**: OpenAI, Azure OpenAI, AWS Bedrock, Google Gemini, Anthropic
+- **📄 Document Processing**: PDF, Word, Excel, PowerPoint, and 20+ file formats
+- **🔄 OCR to Markdown**: Convert documents to structured markdown format
+- **🎯 Data Extraction**: Extract structured data using JSON schemas
+- **⚡ Concurrent Processing**: Process multiple pages simultaneously for speed
+- **🎨 Format Preservation**: Maintain document formatting across pages
+- **🖥️ Cross-platform**: Works on Windows, macOS, and Linux
+
+## 🔧 Prerequisites
+
+### System Dependencies
+
+**For Python:**
+- Python 3.8 or higher
+- [Poppler](https://poppler.freedesktop.org/) (for PDF processing)
+
+**For Node.js:**
+- Node.js 16 or higher
+- [GraphicsMagick](http://www.graphicsmagick.org/)
+- [Ghostscript](https://www.ghostscript.com/)
+
+### Platform-specific Installation
+
+**macOS:**
+```bash
+brew install poppler graphicsmagick ghostscript
 ```
 
-Zerox uses `graphicsmagick` and `ghostscript` for the PDF => image processing step. These should be pulled automatically, but you may need to manually install.
-
-On linux use:
-
-```
+**Ubuntu/Debian:**
+```bash
 sudo apt-get update
-sudo apt-get install -y graphicsmagick
+sudo apt-get install -y poppler-utils graphicsmagick ghostscript
 ```
 
-## Usage
+**Windows:**
+- Download and install Poppler from [poppler-windows](https://github.com/oschwartz10612/poppler-windows)
+- Download and install GraphicsMagick from [official site](http://www.graphicsmagick.org/download.html)
 
-**With file URL**
+## 🚀 Quick Start
 
-```ts
+### Python Quick Start
+
+```python
+import asyncio
+from pyzerox import zerox
+import os
+
+# Set up your API key
+os.environ["OPENAI_API_KEY"] = "your-api-key-here"
+
+async def main():
+    result = await zerox(
+        file_path="path/to/your/document.pdf",
+        model="gpt-4o-mini"
+    )
+    print(result)
+
+# Run the example
+asyncio.run(main())
+```
+
+### Node.js Quick Start
+
+```typescript
 import { zerox } from "zerox";
 
 const result = await zerox({
-  filePath: "https://omni-demo-data.s3.amazonaws.com/test/cs101.pdf",
+  filePath: "path/to/your/document.pdf",
+  credentials: {
+    apiKey: process.env.OPENAI_API_KEY,
+  },
+});
+
+console.log(result);
+```
+
+## 📦 Installation
+
+### Python Installation
+
+```bash
+# Install system dependencies (see Prerequisites section)
+pip install py-zerox
+```
+
+### Node.js Installation
+
+```bash
+# Install system dependencies (see Prerequisites section)
+npm install zerox
+```
+
+### Development Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/quantalogic/quantalogic-pyzerox.git
+cd quantalogic-pyzerox
+
+# Python development setup
+poetry install && poetry build
+
+# Node.js development setup
+cd node-zerox && npm install && npx tsc
+
+# Run tests
+make test  # or individual commands below
+poetry run pytest py_zerox/tests/
+npm test
+```
+
+## 📖 Usage
+
+### Node.js Usage
+
+#### Basic Document Processing
+
+**Process from URL:**
+
+```typescript
+import { zerox } from "zerox";
+
+const result = await zerox({
+  filePath: "https://example.com/document.pdf",
   credentials: {
     apiKey: process.env.OPENAI_API_KEY,
   },
 });
 ```
 
-**From local path**
+**Process from Local Path:**
 
-```ts
+```typescript
 import { zerox } from "zerox";
 import path from "path";
 
 const result = await zerox({
-  filePath: path.resolve(__dirname, "./cs101.pdf"),
+  filePath: path.resolve(__dirname, "./document.pdf"),
   credentials: {
     apiKey: process.env.OPENAI_API_KEY,
   },
 });
 ```
 
-### Parameters
+#### Advanced Configuration
 
-```ts
+```typescript
+import { zerox } from "zerox";
+import { ModelOptions, ModelProvider, ErrorMode } from "zerox/types";
+
 const result = await zerox({
   // Required
-  filePath: "path/to/file",
+  filePath: "path/to/file.pdf",
   credentials: {
     apiKey: "your-api-key",
     // Additional provider-specific credentials as needed
   },
 
-  // Optional
+  // Processing Options
   cleanup: true, // Clear images from tmp after run
   concurrency: 10, // Number of pages to run at a time
-  correctOrientation: true, // True by default, attempts to identify and correct page orientation
-  directImageExtraction: false, // Extract data directly from document images instead of the markdown
-  errorMode: ErrorMode.IGNORE, // ErrorMode.THROW or ErrorMode.IGNORE, defaults to ErrorMode.IGNORE
-  extractionPrompt: "", // LLM instructions for extracting data from document
-  extractOnly: false, // Set to true to only extract structured data using a schema
-  extractPerPage, // Extract data per page instead of the entire document
+  correctOrientation: true, // Attempts to identify and correct page orientation
+  maintainFormat: false, // Slower but helps maintain consistent formatting
+
+  // Image Processing
   imageDensity: 300, // DPI for image conversion
   imageHeight: 2048, // Maximum height for converted images
-  llmParams: {}, // Additional parameters to pass to the LLM
-  maintainFormat: false, // Slower but helps maintain consistent formatting
-  maxImageSize: 15, // Maximum size of images to compress, defaults to 15MB
-  maxRetries: 1, // Number of retries to attempt on a failed page, defaults to 1
-  maxTesseractWorkers: -1, // Maximum number of Tesseract workers. Zerox will start with a lower number and only reach maxTesseractWorkers if needed
-  model: ModelOptions.OPENAI_GPT_4O, // Model to use (supports various models from different providers)
-  modelProvider: ModelProvider.OPENAI, // Choose from OPENAI, BEDROCK, GOOGLE, or AZURE
-  outputDir: undefined, // Save combined result.md to a file
-  pagesToConvertAsImages: -1, // Page numbers to convert to image as array (e.g. `[1, 2, 3]`) or a number (e.g. `1`). Set to -1 to convert all pages
-  prompt: "", // LLM instructions for processing the document
-  schema: undefined, // Schema for structured data extraction
-  tempDir: "/os/tmp", // Directory to use for temporary files (default: system temp directory)
-  trimEdges: true, // True by default, trims pixels from all edges that contain values similar to the given background color, which defaults to that of the top-left pixel
+  maxImageSize: 15, // Maximum size of images to compress (MB)
+  trimEdges: true, // Trims pixels from edges
+
+  // Error Handling
+  errorMode: ErrorMode.IGNORE, // ErrorMode.THROW or ErrorMode.IGNORE
+  maxRetries: 1, // Number of retries on failed pages
+
+  // Data Extraction
+  extractOnly: false, // Extract structured data only
+  extractPerPage: false, // Extract data per page vs entire document
+  schema: undefined, // JSON schema for structured extraction
+
+  // Model Configuration
+  model: ModelOptions.OPENAI_GPT_4O,
+  modelProvider: ModelProvider.OPENAI,
+  llmParams: {}, // Additional LLM parameters
+
+  // Output Options
+  outputDir: undefined, // Save result.md to file
+  tempDir: "/tmp", // Temporary files directory
+
+  // Page Selection
+  pagesToConvertAsImages: -1, // -1 for all pages, or array [1,2,3]
+
+  // Custom Prompts
+  prompt: "", // Custom processing instructions
+  extractionPrompt: "", // Custom extraction instructions
 });
 ```
 
-The `maintainFormat` option tries to return the markdown in a consistent format by passing the output of a prior page in as additional context for the next page. This requires the requests to run synchronously, so it's a lot slower. But valuable if your documents have a lot of tabular data, or frequently have tables that cross pages.
+#### Multi-Provider Examples
 
-```
-Request #1 => page_1_image
-Request #2 => page_1_markdown + page_2_image
-Request #3 => page_2_markdown + page_3_image
-```
-
-### Example Output
-
-```js
-{
-  completionTime: 10038,
-  fileName: 'invoice_36258',
-  inputTokens: 25543,
-  outputTokens: 210,
-  pages: [
-    {
-      page: 1,
-      content: '# INVOICE # 36258\n' +
-        '**Date:** Mar 06 2012  \n' +
-        '**Ship Mode:** First Class  \n' +
-        '**Balance Due:** $50.10  \n' +
-        '## Bill To:\n' +
-        'Aaron Bergman  \n' +
-        '98103, Seattle,  \n' +
-        'Washington, United States  \n' +
-        '## Ship To:\n' +
-        'Aaron Bergman  \n' +
-        '98103, Seattle,  \n' +
-        'Washington, United States  \n' +
-        '\n' +
-        '| Item                                       | Quantity | Rate   | Amount  |\n' +
-        '|--------------------------------------------|----------|--------|---------|\n' +
-        "| Global Push Button Manager's Chair, Indigo | 1        | $48.71 | $48.71  |\n" +
-        '| Chairs, Furniture, FUR-CH-4421             |          |        |         |\n' +
-        '\n' +
-        '**Subtotal:** $48.71  \n' +
-        '**Discount (20%):** $9.74  \n' +
-        '**Shipping:** $11.13  \n' +
-        '**Total:** $50.10  \n' +
-        '---\n' +
-        '**Notes:**  \n' +
-        'Thanks for your business!  \n' +
-        '**Terms:**  \n' +
-        'Order ID : CA-2012-AB10015140-40974  ',
-      contentLength: 747,
-    }
-  ],
-  extracted: null,
-  summary: {
-    totalPages: 1,
-    ocr: {
-      failed: 0,
-      successful: 1,
-    },
-    extracted: null,
-  },
-}
-```
-
-### Data Extraction
-
-Zerox supports structured data extraction from documents using a schema. This allows you to pull specific information from documents in a structured format instead of getting the full markdown conversion.
-
-Set `extractOnly: true` and provide a `schema` to extract structured data. The schema follows the [JSON Schema standard](https://json-schema.org/understanding-json-schema/).
-
-Use `extractPerPage` to extract data per page instead of from the whole document at once.
-
-You can also set `extractionModel`, `extractionModelProvider`, and `extractionCredentials` to use a different model for extraction than OCR. By default, the same model is used.
-
-### Supported Models
-
-Zerox supports a wide range of models across different providers:
-
-- **Azure OpenAI**
-
-  - GPT-4 Vision (gpt-4o)
-  - GPT-4 Vision Mini (gpt-4o-mini)
-  - GPT-4.1 (gpt-4.1)
-  - GPT-4.1 Mini (gpt-4.1-mini)
-
-- **OpenAI**
-
-  - GPT-4 Vision (gpt-4o)
-  - GPT-4 Vision Mini (gpt-4o-mini)
-  - GPT-4.1 (gpt-4.1)
-  - GPT-4.1 Mini (gpt-4.1-mini)
-
-- **AWS Bedrock**
-
-  - Claude 3 Haiku (2024.03, 2024.10)
-  - Claude 3 Sonnet (2024.02, 2024.06, 2024.10)
-  - Claude 3 Opus (2024.02)
-
-- **Google Gemini**
-  - Gemini 1.5 (Flash, Flash-8B, Pro)
-  - Gemini 2.0 (Flash, Flash-Lite)
-
-```ts
+```typescript
 import { zerox } from "zerox";
-import { ModelOptions, ModelProvider } from "zerox/node-zerox/dist/types";
+import { ModelOptions, ModelProvider } from "zerox/types";
 
 // OpenAI
 const openaiResult = await zerox({
@@ -257,243 +281,368 @@ const geminiResult = await zerox({
 });
 ```
 
-## Python Zerox
+### Python Usage
 
-(Python SDK - supports vision models from different providers like OpenAI, Azure OpenAI, Anthropic, AWS Bedrock, etc.)
-
-### Installation
-
-- Install **poppler** on the system, it should be available in path variable. See the [pdf2image documentation](https://pdf2image.readthedocs.io/en/latest/installation.html) for instructions by platform.
-- Install py-zerox:
-
-```sh
-pip install py-zerox
-```
-
-The `pyzerox.zerox` function is an asynchronous API that performs OCR (Optical Character Recognition) to markdown using vision models. It processes PDF files and converts them into markdown format. Make sure to set up the environment variables for the model and the model provider before using this API.
-
-Refer to the [LiteLLM Documentation](https://docs.litellm.ai/docs/providers) for setting up the environment and passing the correct model name.
-
-### Usage
+#### Basic Document Processing
 
 ```python
+import asyncio
+from pyzerox import zerox
+import os
+
+# Set up environment
+os.environ["OPENAI_API_KEY"] = "your-api-key"
+
+async def main():
+    result = await zerox(
+        file_path="path/to/document.pdf",
+        model="gpt-4o-mini"
+    )
+    print(result)
+
+asyncio.run(main())
+```
+
+#### Advanced Configuration
+
+```python
+import asyncio
+from pyzerox import zerox
+import os
+
+async def main():
+    result = await zerox(
+        file_path="https://example.com/document.pdf",
+        model="gpt-4o-mini",
+
+        # Processing Options
+        cleanup=True,
+        concurrency=10,
+        maintain_format=False,
+
+        # Page Selection
+        select_pages=None,  # None for all, or [1,2,3] for specific pages
+
+        # Output Options
+        output_dir="./output",
+        temp_dir=None,  # Uses system temp if None
+
+        # Custom Prompts
+        custom_system_prompt=None,
+
+        # Additional model parameters
+        **{"temperature": 0.1}
+    )
+    return result
+
+result = asyncio.run(main())
+```
+
+#### Multi-Provider Examples
+
+```python
+import asyncio
 from pyzerox import zerox
 import os
 import json
-import asyncio
 
-### Model Setup (Use only Vision Models) Refer: https://docs.litellm.ai/docs/providers ###
-
-## placeholder for additional model kwargs which might be required for some models
-kwargs = {}
-
-## system prompt to use for the vision model
-custom_system_prompt = None
-
-# to override
-# custom_system_prompt = "For the below PDF page, do something..something..." ## example
-
-###################### Example for OpenAI ######################
-model = "gpt-4o-mini" ## openai model
-os.environ["OPENAI_API_KEY"] = "" ## your-api-key
-
-
-###################### Example for Azure OpenAI ######################
-model = "azure/gpt-4o-mini" ## "azure/<your_deployment_name>" -> format <provider>/<model>
-os.environ["AZURE_API_KEY"] = "" # "your-azure-api-key"
-os.environ["AZURE_API_BASE"] = "" # "https://example-endpoint.openai.azure.com"
-os.environ["AZURE_API_VERSION"] = "" # "2023-05-15"
-
-
-###################### Example for Gemini ######################
-model = "gemini/gpt-4o-mini" ## "gemini/<gemini_model>" -> format <provider>/<model>
-os.environ['GEMINI_API_KEY'] = "" # your-gemini-api-key
-
-
-###################### Example for Anthropic ######################
-model="claude-3-opus-20240229"
-os.environ["ANTHROPIC_API_KEY"] = "" # your-anthropic-api-key
-
-###################### Vertex ai ######################
-model = "vertex_ai/gemini-1.5-flash-001" ## "vertex_ai/<model_name>" -> format <provider>/<model>
-## GET CREDENTIALS
-## RUN ##
-# !gcloud auth application-default login - run this to add vertex credentials to your env
-## OR ##
-file_path = 'path/to/vertex_ai_service_account.json'
-
-# Load the JSON file
-with open(file_path, 'r') as file:
-    vertex_credentials = json.load(file)
-
-# Convert to JSON string
-vertex_credentials_json = json.dumps(vertex_credentials)
-
-vertex_credentials=vertex_credentials_json
-
-## extra args
-kwargs = {"vertex_credentials": vertex_credentials}
-
-###################### For other providers refer: https://docs.litellm.ai/docs/providers ######################
-
-# Define main async entrypoint
-async def main():
-    file_path = "https://omni-demo-data.s3.amazonaws.com/test/cs101.pdf" ## local filepath and file URL supported
-
-    ## process only some pages or all
-    select_pages = None ## None for all, but could be int or list(int) page numbers (1 indexed)
-
-    output_dir = "./output_test" ## directory to save the consolidated markdown file
-    result = await zerox(file_path=file_path, model=model, output_dir=output_dir,
-                        custom_system_prompt=custom_system_prompt,select_pages=select_pages, **kwargs)
+# OpenAI
+async def openai_example():
+    os.environ["OPENAI_API_KEY"] = "your-api-key"
+    result = await zerox(
+        file_path="document.pdf",
+        model="gpt-4o-mini"
+    )
     return result
 
+# Azure OpenAI
+async def azure_example():
+    os.environ["AZURE_API_KEY"] = "your-azure-api-key"
+    os.environ["AZURE_API_BASE"] = "https://example-endpoint.openai.azure.com"
+    os.environ["AZURE_API_VERSION"] = "2023-05-15"
 
-# run the main function:
-result = asyncio.run(main())
+    result = await zerox(
+        file_path="document.pdf",
+        model="azure/gpt-4o-mini"
+    )
+    return result
 
-# print markdown result
-print(result)
+# Google Gemini
+async def gemini_example():
+    os.environ['GEMINI_API_KEY'] = "your-gemini-api-key"
+    result = await zerox(
+        file_path="document.pdf",
+        model="gemini/gemini-1.5-pro"
+    )
+    return result
+
+# Anthropic
+async def anthropic_example():
+    os.environ["ANTHROPIC_API_KEY"] = "your-anthropic-api-key"
+    result = await zerox(
+        file_path="document.pdf",
+        model="claude-3-opus-20240229"
+    )
+    return result
 ```
 
-### Parameters
+## 🎯 API Reference
+
+### Node.js API
+
+#### `zerox(options)`
+
+**Parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `filePath` | `string` | Required | Path to document (local or URL) |
+| `credentials` | `object` | Required | API credentials for chosen provider |
+| `model` | `ModelOptions` | `OPENAI_GPT_4O` | Model to use for processing |
+| `modelProvider` | `ModelProvider` | `OPENAI` | Provider (OPENAI, AZURE, BEDROCK, GOOGLE) |
+| `cleanup` | `boolean` | `true` | Clean up temporary files after processing |
+| `concurrency` | `number` | `10` | Number of pages to process simultaneously |
+| `maintainFormat` | `boolean` | `false` | Maintain formatting across pages (slower) |
+| `extractOnly` | `boolean` | `false` | Extract structured data only |
+| `schema` | `object` | `undefined` | JSON schema for data extraction |
+| `outputDir` | `string` | `undefined` | Directory to save output files |
+
+**Returns:** `Promise<ZeroxOutput>`
+
+### Python API
+
+#### `zerox(file_path, model, **kwargs)`
+
+**Parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `file_path` | `str` | Required | Path to document (local or URL) |
+| `model` | `str` | `"gpt-4o-mini"` | Model identifier |
+| `cleanup` | `bool` | `True` | Clean up temporary files |
+| `concurrency` | `int` | `10` | Number of concurrent processes |
+| `maintain_format` | `bool` | `False` | Maintain formatting across pages |
+| `select_pages` | `Union[int, List[int]]` | `None` | Pages to process (None for all) |
+| `output_dir` | `str` | `None` | Directory to save output |
+| `custom_system_prompt` | `str` | `None` | Custom system prompt |
+
+**Returns:** `ZeroxOutput`
+
+## 🤖 Supported Models
+
+### OpenAI
+- **GPT-4o** (`gpt-4o`) - Latest vision model
+- **GPT-4o Mini** (`gpt-4o-mini`) - Faster, cost-effective option
+- **GPT-4 Turbo** (`gpt-4-turbo`) - Previous generation
+
+### Azure OpenAI
+- **GPT-4o** (`azure/gpt-4o`)
+- **GPT-4o Mini** (`azure/gpt-4o-mini`)
+- Format: `azure/<deployment-name>`
+
+### AWS Bedrock
+- **Claude 3 Haiku** (`anthropic.claude-3-haiku-20240307-v1:0`)
+- **Claude 3 Sonnet** (`anthropic.claude-3-sonnet-20240229-v1:0`)
+- **Claude 3 Opus** (`anthropic.claude-3-opus-20240229-v1:0`)
+
+### Google Gemini
+- **Gemini 1.5 Pro** (`gemini/gemini-1.5-pro`)
+- **Gemini 1.5 Flash** (`gemini/gemini-1.5-flash`)
+- **Gemini 2.0 Flash** (`gemini/gemini-2.0-flash-exp`)
+
+### Anthropic
+- **Claude 3 Opus** (`claude-3-opus-20240229`)
+- **Claude 3 Sonnet** (`claude-3-sonnet-20240229`)
+- **Claude 3 Haiku** (`claude-3-haiku-20240307`)
+
+## 📄 Supported File Types
+
+Quantalogic PyZeroX supports a wide range of document formats:
+
+**Document Formats:**
+- PDF, DOC, DOCX, RTF, TXT
+- ODT, OTT (OpenDocument)
+- HTML, HTM, XML
+- WPS, WPD (WordPerfect)
+
+**Spreadsheet Formats:**
+- XLS, XLSX (Excel)
+- ODS, OTS (OpenDocument)
+- CSV, TSV
+
+**Presentation Formats:**
+- PPT, PPTX (PowerPoint)
+- ODP, OTP (OpenDocument)
+
+**Image Formats:**
+- PNG, JPG, JPEG, TIFF, BMP
+- SVG, WEBP
+
+## 💡 Examples
+
+### Data Extraction Example
+
+```typescript
+import { zerox } from "zerox";
+
+const result = await zerox({
+  filePath: "invoice.pdf",
+  extractOnly: true,
+  schema: {
+    type: "object",
+    properties: {
+      invoice_number: { type: "string" },
+      date: { type: "string" },
+      total: { type: "number" },
+      items: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            price: { type: "number" },
+            quantity: { type: "number" }
+          }
+        }
+      }
+    }
+  },
+  credentials: {
+    apiKey: process.env.OPENAI_API_KEY,
+  },
+});
+```
+
+### Batch Processing Example
 
 ```python
-async def zerox(
-    cleanup: bool = True,
-    concurrency: int = 10,
-    file_path: Optional[str] = "",
-    maintain_format: bool = False,
-    model: str = "gpt-4o-mini",
-    output_dir: Optional[str] = None,
-    temp_dir: Optional[str] = None,
-    custom_system_prompt: Optional[str] = None,
-    select_pages: Optional[Union[int, Iterable[int]]] = None,
-    **kwargs
-) -> ZeroxOutput:
-  ...
-```
+import asyncio
+from pyzerox import zerox
+import os
 
-Parameters
-
-- **cleanup** (bool, optional):
-  Whether to clean up temporary files after processing. Defaults to True.
-- **concurrency** (int, optional):
-  The number of concurrent processes to run. Defaults to 10.
-- **file_path** (Optional[str], optional):
-  The path to the PDF file to process. Defaults to an empty string.
-- **maintain_format** (bool, optional):
-  Whether to maintain the format from the previous page. Defaults to False.
-- **model** (str, optional):
-  The model to use for generating completions. Defaults to "gpt-4o-mini".
-  Refer to LiteLLM Providers for the correct model name, as it may differ depending on the provider.
-- **output_dir** (Optional[str], optional):
-  The directory to save the markdown output. Defaults to None.
-- **temp_dir** (str, optional):
-  The directory to store temporary files, defaults to some named folder in system's temp directory. If already exists, the contents will be deleted before Zerox uses it.
-- **custom_system_prompt** (str, optional):
-  The system prompt to use for the model, this overrides the default system prompt of Zerox.Generally it is not required unless you want some specific behavior. Defaults to None.
-- **select_pages** (Optional[Union[int, Iterable[int]]], optional):
-  Pages to process, can be a single page number or an iterable of page numbers. Defaults to None
-- **kwargs** (dict, optional):
-  Additional keyword arguments to pass to the litellm.completion method.
-  Refer to the LiteLLM Documentation and Completion Input for details.
-
-Returns
-
-- ZeroxOutput:
-  Contains the markdown content generated by the model and also some metadata (refer below).
-
-### Example Output (output from "azure/gpt-4o-mini")
-
-Note the output is manually wrapped for this documentation for better readability.
-
-````Python
-ZeroxOutput(
-    completion_time=9432.975,
-    file_name='cs101',
-    input_tokens=36877,
-    output_tokens=515,
-    pages=[
-        Page(
-            content='| Type    | Description                          | Wrapper Class |\n' +
-                    '|---------|--------------------------------------|---------------|\n' +
-                    '| byte    | 8-bit signed 2s complement integer   | Byte          |\n' +
-                    '| short   | 16-bit signed 2s complement integer  | Short         |\n' +
-                    '| int     | 32-bit signed 2s complement integer  | Integer       |\n' +
-                    '| long    | 64-bit signed 2s complement integer  | Long          |\n' +
-                    '| float   | 32-bit IEEE 754 floating point number| Float         |\n' +
-                    '| double  | 64-bit floating point number         | Double        |\n' +
-                    '| boolean | may be set to true or false          | Boolean       |\n' +
-                    '| char    | 16-bit Unicode (UTF-16) character    | Character     |\n\n' +
-                    'Table 26.2.: Primitive types in Java\n\n' +
-                    '### 26.3.1. Declaration & Assignment\n\n' +
-                    'Java is a statically typed language meaning that all variables must be declared before you can use ' +
-                    'them or refer to them. In addition, when declaring a variable, you must specify both its type and ' +
-                    'its identifier. For example:\n\n' +
-                    '```java\n' +
-                    'int numUnits;\n' +
-                    'double costPerUnit;\n' +
-                    'char firstInitial;\n' +
-                    'boolean isStudent;\n' +
-                    '```\n\n' +
-                    'Each declaration specifies the variable’s type followed by the identifier and ending with a ' +
-                    'semicolon. The identifier rules are fairly standard: a name can consist of lowercase and ' +
-                    'uppercase alphabetic characters, numbers, and underscores but may not begin with a numeric ' +
-                    'character. We adopt the modern camelCasing naming convention for variables in our code. In ' +
-                    'general, variables must be assigned a value before you can use them in an expression. You do not ' +
-                    'have to immediately assign a value when you declare them (though it is good practice), but some ' +
-                    'value must be assigned before they can be used or the compiler will issue an error.\n\n' +
-                    'The assignment operator is a single equal sign, `=` and is a right-to-left assignment. That is, ' +
-                    'the variable that we wish to assign the value to appears on the left-hand-side while the value ' +
-                    '(literal, variable or expression) is on the right-hand-side. Using our variables from before, ' +
-                    'we can assign them values:\n\n' +
-                    '> 2 Instance variables, that is variables declared as part of an object do have default values. ' +
-                    'For objects, the default is `null`, for all numeric types, zero is the default value. For the ' +
-                    'boolean type, `false` is the default, and the default char value is `\\0`, the null-terminating ' +
-                    'character (zero in the ASCII table).',
-            content_length=2333,
-            page=1
+async def process_documents(file_paths):
+    results = []
+    for file_path in file_paths:
+        result = await zerox(
+            file_path=file_path,
+            model="gpt-4o-mini",
+            output_dir="./processed"
         )
-    ]
-)
-````
+        results.append(result)
+    return results
 
-## Supported File Types
-
-We use a combination of `libreoffice` and `graphicsmagick` to do document => image conversion. For non-image / non-PDF files, we use libreoffice to convert that file to a PDF, and then to an image.
-
-```js
-[
-  "pdf", // Portable Document Format
-  "doc", // Microsoft Word 97-2003
-  "docx", // Microsoft Word 2007-2019
-  "odt", // OpenDocument Text
-  "ott", // OpenDocument Text Template
-  "rtf", // Rich Text Format
-  "txt", // Plain Text
-  "html", // HTML Document
-  "htm", // HTML Document (alternative extension)
-  "xml", // XML Document
-  "wps", // Microsoft Works Word Processor
-  "wpd", // WordPerfect Document
-  "xls", // Microsoft Excel 97-2003
-  "xlsx", // Microsoft Excel 2007-2019
-  "ods", // OpenDocument Spreadsheet
-  "ots", // OpenDocument Spreadsheet Template
-  "csv", // Comma-Separated Values
-  "tsv", // Tab-Separated Values
-  "ppt", // Microsoft PowerPoint 97-2003
-  "pptx", // Microsoft PowerPoint 2007-2019
-  "odp", // OpenDocument Presentation
-  "otp", // OpenDocument Presentation Template
-];
+# Process multiple documents
+files = ["doc1.pdf", "doc2.pdf", "doc3.pdf"]
+results = asyncio.run(process_documents(files))
 ```
 
-## Credits
+### Format Preservation Example
 
-- [Litellm](https://github.com/BerriAI/litellm): <https://github.com/BerriAI/litellm> | This powers our python sdk to support all popular vision models from different providers.
+```typescript
+// For documents with complex tables spanning multiple pages
+const result = await zerox({
+  filePath: "financial-report.pdf",
+  maintainFormat: true, // Slower but better for tables
+  concurrency: 1, // Required for maintainFormat
+  credentials: {
+    apiKey: process.env.OPENAI_API_KEY,
+  },
+});
+```
 
-### License
+## 🔧 Development
 
-This project is licensed under the MIT License.
+### Project Structure
+
+```
+quantalogic-pyzerox/
+├── py_zerox/                 # Python package
+│   ├── pyzerox/             # Main Python module
+│   │   ├── core/            # Core processing logic
+│   │   ├── models/          # Data models
+│   │   └── processor/       # Document processors
+│   └── tests/               # Python tests
+├── node-zerox/              # Node.js package
+│   ├── src/                 # TypeScript source
+│   │   ├── models/          # Model definitions
+│   │   └── utils/           # Utility functions
+│   └── tests/               # Node.js tests
+├── docs/                    # Documentation
+├── examples/                # Example code
+└── shared/                  # Shared resources
+```
+
+### Building from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/quantalogic/quantalogic-pyzerox.git
+cd quantalogic-pyzerox
+
+# Install dependencies
+make install
+
+# Build packages
+make build
+
+# Run tests
+make test
+
+# Run linting
+make lint
+```
+
+### Testing
+
+```bash
+# Python tests
+poetry run pytest py_zerox/tests/
+
+# Node.js tests
+cd node-zerox && npm test
+
+# Integration tests
+make test-integration
+```
+
+## 📚 Documentation
+
+For detailed documentation, see the [`docs/`](docs/) directory:
+
+- [Project Overview](docs/project-overview.md) - Purpose, stack, platform support
+- [Architecture](docs/architecture.md) - System structure, data flow, key files
+- [Build System](docs/build-system.md) - Build configs, workflows, troubleshooting
+- [Testing](docs/testing.md) - Test types, commands, organization
+- [Development](docs/development.md) - Code style, patterns, workflows
+- [Deployment](docs/deployment.md) - Packaging, scripts, output locations
+- [Files Catalog](docs/files.md) - File groups, entry points, dependencies
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
+
+## 📜 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## 🙏 Credits
+
+This project is a maintained fork of the original [ZeroX](https://github.com/getomni-ai/zerox) by [Omni AI](https://github.com/getomni-ai). We're grateful for their foundational work and continue to build upon their vision.
+
+- **Original ZeroX Project**: [getomni-ai/zerox](https://github.com/getomni-ai/zerox) - The original OCR and document processing toolkit
+- [LiteLLM](https://github.com/BerriAI/litellm) - Powers our Python SDK with multi-provider support
+- Original PyZeroX project contributors
+- The open-source community for inspiration and feedback
+
+---
+
+**Made with ❤️ by the [Quantalogic](https://www.quantalogic.app) team** - Advancing AI-powered document processing and workflow automation.
+
+*Originally based on [ZeroX](https://github.com/getomni-ai/zerox) by Omni AI*
