@@ -1,52 +1,30 @@
-![Hero Image](./assets/heroImage.png)
 
-## Zerox OCR
+<!-- Generated: 2025-07-05 00:00:00 UTC -->
 
-<a href="https://discord.gg/smg2QfwtJ6">
-  <img src="https://github.com/user-attachments/assets/cccc0e9a-e3b2-425e-9b54-e5024681b129" alt="Join us on Discord" width="200px">
-</a>
+# Quantalogic PyZeroX
 
-A dead simple way of OCR-ing a document for AI ingestion. Documents are meant to be a visual representation after all. With weird layouts, tables, charts, etc. The vision models just make sense!
+Quantalogic PyZeroX is a cross-platform toolkit for document processing and LLM-powered workflows, supporting both Python and Node.js. It enables rapid prototyping and deployment of AI-driven document pipelines.
 
-The general logic:
+## Key Entry Points
+- Python: `py_zerox/pyzerox/core/zerox.py`
+- Node.js: `node-zerox/src/index.ts`
+- Build configs: `pyproject.toml`, `package.json`, `Makefile`
 
-- Pass in a file (PDF, DOCX, image, etc.)
-- Convert that file into a series of images
-- Pass each image to GPT and ask nicely for Markdown
-- Aggregate the responses and return Markdown
+## Quick Build & Test
+- Python: `poetry install && poetry build && poetry run pytest py_zerox/tests/`
+- Node.js: `npm install && npx tsc && npm test`
+- Unified: `make` (see `Makefile`)
 
-Try out the hosted version here: <https://getomni.ai/ocr-demo>
-Or visit our full documentation at: <https://docs.getomni.ai/zerox>
+## Documentation
+- [Project Overview](docs/project-overview.md): Purpose, stack, platform support
+- [Architecture](docs/architecture.md): System structure, data flow, key files
+- [Build System](docs/build-system.md): Build configs, workflows, troubleshooting
+- [Testing](docs/testing.md): Test types, commands, organization
+- [Development](docs/development.md): Code style, patterns, workflows
+- [Deployment](docs/deployment.md): Packaging, scripts, output locations
+- [Files Catalog](docs/files.md): File groups, entry points, dependencies
 
-## Getting Started
-
-Zerox is available as both a Node and Python package.
-
-- [Node README](#node-zerox) - [npm package](https://www.npmjs.com/package/zerox)
-- [Python README](#python-zerox) - [pip package](https://pypi.org/project/py-zerox/)
-
-| Feature                   | Node.js                      | Python                     |
-| ------------------------- | ---------------------------- | -------------------------- |
-| PDF Processing            | ✓ (requires graphicsmagick)  | ✓ (requires poppler)       |
-| Image Processing          | ✓                            | ✓                          |
-| OpenAI Support            | ✓                            | ✓                          |
-| Azure OpenAI Support      | ✓                            | ✓                          |
-| AWS Bedrock Support       | ✓                            | ✓                          |
-| Google Gemini Support     | ✓                            | ✓                          |
-| Vertex AI Support         | ✗                            | ✓                          |
-| Data Extraction           | ✓ (`schema`)                 | ✗                          |
-| Per-page Extraction       | ✓ (`extractPerPage`)         | ✗                          |
-| Custom System Prompts     | ✗                            | ✓ (`custom_system_prompt`) |
-| Maintain Format Option    | ✓ (`maintainFormat`)         | ✓ (`maintain_format`)      |
-| Async API                 | ✓                            | ✓                          |
-| Error Handling Modes      | ✓ (`errorMode`)              | ✗                          |
-| Concurrent Processing     | ✓ (`concurrency`)            | ✓ (`concurrency`)          |
-| Temp Directory Management | ✓ (`tempDir`)                | ✓ (`temp_dir`)             |
-| Page Selection            | ✓ (`pagesToConvertAsImages`) | ✓ (`select_pages`)         |
-| Orientation Correction    | ✓ (`correctOrientation`)     | ✗                          |
-| Edge Trimming             | ✓ (`trimEdges`)              | ✗                          |
-
-## Node Zerox
+For file locations and practical examples, see the [Files Catalog](docs/files.md).
 
 (Node.js SDK - supports vision models from different providers like OpenAI, Azure OpenAI, Anthropic, AWS Bedrock, Google Gemini, etc.)
 
