@@ -1,32 +1,34 @@
 [project]
-name = "quantalogic_py_zerox"
-version = "0.0.7"
+name = "quantalogic-py-zerox"
+version = "0.0.8"
 description = "ocr documents using vision models from all popular providers like OpenAI, Azure OpenAI, Anthropic, AWS Bedrock etc"
 authors = [
     { name = "wizenheimer" },
-    { name = "pradhyumna85" }
+    { name = "pradhyumna85" },
+    { name = "raphaelmansuy" }
 ]
 license = { text = "MIT" }
 readme = "README.md"
 requires-python = ">=3.11"
 keywords = ["ocr", "document", "llm"]
 dependencies = [
-    "aiofiles>=23.0",
-    "aiohttp>=3.9.5",
-    "pdf2image>=1.17.0",
-    "litellm>=1.44.15",
-    "aioshutil>=1.5",
-    "PyPDF2>=3.0.1"
+    "aiofiles",
+    "aiohttp",
+    "pdf2image",
+    "litellm",
+    "aioshutil",
+    "PyPDF2"
 ]
 
 [project.optional-dependencies]
 dev = [
-    "notebook>=7.2.1",
-    "black>=24.4.2",
-    "ruff"
+    "notebook",
+    "black",
+    "ruff",
+    "twine"
 ]
 test = [
-    "pytest>=8.3.2"
+    "pytest"
 ]
 
 [project.scripts]

@@ -1,3 +1,33 @@
+# =============================
+# Quantalogic PyZeroX Makefile
+# =============================
+
+.PHONY: help
+help:
+	@echo "\nQuantalogic PyZeroX Makefile Commands:\n"
+	@echo "  help                Show this help message"
+	@echo "  init                Initialize development environment (pre-commit, node, etc.)"
+	@echo "  build               Build the Python package (wheel) and install dev/test deps"
+	@echo "  test                Run all Python tests"
+	@echo "  lint                Run ruff linter on source and tests"
+	@echo "  format              Check code formatting with black"
+	@echo "  lint-fix            Auto-fix lint issues with ruff"
+	@echo "  format-fix          Auto-fix formatting with black"
+	@echo "  fix                 Run both lint-fix and format-fix"
+	@echo "  clean               Remove build artifacts and dist directory"
+	@echo "  dev                 Build and prepare dev environment"
+	@echo "  publish-dry-run     Build and upload to TestPyPI (dry run)"
+	@echo "  publish             Build and upload to PyPI (real publish)"
+	@echo "\nExample: make build\n"
+
+# Publish to PyPI (dry run and real)
+publish-dry-run:
+	python3 -m build
+	twine upload --repository testpypi dist/*
+
+publish:
+	python3 -m build
+	twine upload dist/*
 
 # Package/project config
 PACKAGE_DIR := py_zerox
@@ -6,8 +36,9 @@ TEST_DIR := $(PACKAGE_DIR)/tests
 DIST_DIR := $(PACKAGE_DIR)/dist
 
 # Default target
+
 .PHONY: all
-all: build test dev
+all: help
 
 
 # Initialization (optional, for devs)

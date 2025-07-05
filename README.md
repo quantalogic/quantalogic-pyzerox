@@ -23,7 +23,7 @@
 - [🎯 API Reference](#-api-reference)
   - [Node.js API](#nodejs-api)
   - [Python API](#python-api)
-- [🤖 Supported Models](#-supported-models)
+- [🤖 Supported Vision Models](#-supported-vision-models)
 - [📄 Supported File Types](#-supported-file-types)
 - [💡 Examples](#-examples)
 - [🔧 Development](#-development)
@@ -87,13 +87,15 @@ os.environ["OPENAI_API_KEY"] = "your-api-key-here"
 async def main():
     result = await zerox(
         file_path="path/to/your/document.pdf",
-        model="gpt-4o-mini"
+        model="gpt-4o"  # Latest vision-capable model
     )
     print(result)
 
 # Run the example
 asyncio.run(main())
 ```
+
+> **⚠️ Important:** PyZeroX requires vision-capable models to process document images. Ensure you're using a model that supports image input.
 
 ### Node.js Quick Start
 
@@ -262,7 +264,7 @@ const azureResult = await zerox({
 const bedrockResult = await zerox({
   filePath: "path/to/file.pdf",
   modelProvider: ModelProvider.BEDROCK,
-  model: ModelOptions.BEDROCK_CLAUDE_3_SONNET_2024_10,
+  model: ModelOptions.BEDROCK_CLAUDE_3_7_SONNET_2025_02,
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -274,7 +276,7 @@ const bedrockResult = await zerox({
 const geminiResult = await zerox({
   filePath: "path/to/file.pdf",
   modelProvider: ModelProvider.GOOGLE,
-  model: ModelOptions.GOOGLE_GEMINI_1_5_PRO,
+  model: ModelOptions.GOOGLE_GEMINI_2_5_FLASH,
   credentials: {
     apiKey: process.env.GEMINI_API_KEY,
   },
@@ -313,7 +315,7 @@ import os
 async def main():
     result = await zerox(
         file_path="https://example.com/document.pdf",
-        model="gpt-4o-mini",
+        model="gpt-4o",
 
         # Processing Options
         cleanup=True,
@@ -367,21 +369,21 @@ async def azure_example():
     )
     return result
 
-# Google Gemini
+# Google Gemini (Latest)
 async def gemini_example():
     os.environ['GEMINI_API_KEY'] = "your-gemini-api-key"
     result = await zerox(
         file_path="document.pdf",
-        model="gemini/gemini-1.5-pro"
+        model="gemini/gemini-2.5-flash"  # Latest Gemini vision model
     )
     return result
 
-# Anthropic
+# Anthropic Claude (Latest)
 async def anthropic_example():
     os.environ["ANTHROPIC_API_KEY"] = "your-anthropic-api-key"
     result = await zerox(
         file_path="document.pdf",
-        model="claude-3-opus-20240229"
+        model="claude-sonnet-4-20250514"  # Latest Claude with exceptional reasoning
     )
     return result
 ```
@@ -418,7 +420,7 @@ async def anthropic_example():
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `file_path` | `str` | Required | Path to document (local or URL) |
-| `model` | `str` | `"gpt-4o-mini"` | Model identifier |
+| `model` | `str` | `"gpt-4o"` | Model identifier |
 | `cleanup` | `bool` | `True` | Clean up temporary files |
 | `concurrency` | `int` | `10` | Number of concurrent processes |
 | `maintain_format` | `bool` | `False` | Maintain formatting across pages |
@@ -428,32 +430,65 @@ async def anthropic_example():
 
 **Returns:** `ZeroxOutput`
 
-## 🤖 Supported Models
+## 🤖 Supported Vision Models
 
-### OpenAI
-- **GPT-4o** (`gpt-4o`) - Latest vision model
-- **GPT-4o Mini** (`gpt-4o-mini`) - Faster, cost-effective option
-- **GPT-4 Turbo** (`gpt-4-turbo`) - Previous generation
+PyZeroX requires **vision-capable models** for document processing. All models are supported via [LiteLLM](https://docs.litellm.ai/), ensuring compatibility with the latest model releases and API updates.
 
-### Azure OpenAI
-- **GPT-4o** (`azure/gpt-4o`)
-- **GPT-4o Mini** (`azure/gpt-4o-mini`)
+### OpenAI Vision Models
+
+**Latest Vision Models (2024/2025):**
+- **GPT-4.1** (`gpt-4.1`) - Next generation multimodal model
+- **GPT-4.1 Mini** (`gpt-4.1-mini`) - Efficient next-gen model
+- **o3-mini** (`o3-mini`) - Reasoning model with vision
+- **o1-mini** (`o1-mini`) - Advanced reasoning capabilities
+- **GPT-4o** (`gpt-4o`) - Stable multimodal vision model
+- **GPT-4o Mini** (`gpt-4o-mini`) - Faster, cost-effective vision option
+- **GPT-4 Turbo** (`gpt-4-turbo`) - Previous generation with vision
+
+### Azure OpenAI Vision Models
+
+- **GPT-4o** (`azure/gpt-4o`) - Latest multimodal model
+- **GPT-4o Mini** (`azure/gpt-4o-mini`) - Cost-effective vision option
+- **GPT-4 Turbo** (`azure/gpt-4-turbo`) - Previous generation with vision
 - Format: `azure/<deployment-name>`
 
-### AWS Bedrock
-- **Claude 3 Haiku** (`anthropic.claude-3-haiku-20240307-v1:0`)
-- **Claude 3 Sonnet** (`anthropic.claude-3-sonnet-20240229-v1:0`)
-- **Claude 3 Opus** (`anthropic.claude-3-opus-20240229-v1:0`)
+### Google Gemini Vision Models (AI Studio)
 
-### Google Gemini
-- **Gemini 1.5 Pro** (`gemini/gemini-1.5-pro`)
-- **Gemini 1.5 Flash** (`gemini/gemini-1.5-flash`)
-- **Gemini 2.0 Flash** (`gemini/gemini-2.0-flash-exp`)
+- **Gemini 2.5 Pro** (`gemini/gemini-2.5-pro`) - Most powerful thinking model with vision
+- **Gemini 2.5 Flash** (`gemini/gemini-2.5-flash`) - High-performance with adaptive thinking
+- **Gemini 2.0 Flash** (`gemini/gemini-2.0-flash`) - Fast and versatile multimodal model
+- **Gemini 1.5 Pro** (`gemini/gemini-1.5-pro`) - Large context window with vision
+- **Gemini 1.5 Flash** (`gemini/gemini-1.5-flash`) - Fast inference with vision
 
-### Anthropic
-- **Claude 3 Opus** (`claude-3-opus-20240229`)
-- **Claude 3 Sonnet** (`claude-3-sonnet-20240229`)
-- **Claude 3 Haiku** (`claude-3-haiku-20240307`)
+### Google Vertex AI Vision Models
+
+- **Gemini 2.5 Pro** (`vertex_ai/gemini-2.5-pro`)
+- **Gemini 2.5 Flash** (`vertex_ai/gemini-2.5-flash`)
+- **Gemini 2.0 Flash** (`vertex_ai/gemini-2.0-flash`)
+- **Gemini 1.5 Pro** (`vertex_ai/gemini-1.5-pro`)
+- **Gemini 1.5 Flash** (`vertex_ai/gemini-1.5-flash`)
+
+### AWS Bedrock Vision Models
+
+- **Claude 3.7 Sonnet** (`bedrock/us.anthropic.claude-3-7-sonnet-20250219-v1:0`)
+- **Claude 3.5 Sonnet** (`bedrock/anthropic.claude-3-5-sonnet-20241022-v2:0`)
+- **Claude 3.5 Haiku** (`bedrock/anthropic.claude-3-5-haiku-20241022-v1:0`)
+- **Claude 3 Opus** (`bedrock/anthropic.claude-3-opus-20240229-v1:0`)
+- **Claude 3 Sonnet** (`bedrock/anthropic.claude-3-sonnet-20240229-v1:0`)
+- **Claude 3 Haiku** (`bedrock/anthropic.claude-3-haiku-20240307-v1:0`)
+
+### Anthropic Vision Models (Direct API)
+
+- **Claude Opus 4** (`claude-opus-4-20250514`) - Most capable and intelligent model
+- **Claude Sonnet 4** (`claude-sonnet-4-20250514`) - High-performance with exceptional reasoning
+- **Claude 3.7 Sonnet** (`claude-3-7-sonnet-20250219`) - Latest with extended thinking
+- **Claude 3.5 Sonnet** (`claude-3-5-sonnet-20241022`) - Enhanced vision capabilities
+- **Claude 3.5 Haiku** (`claude-3-5-haiku-20241022`) - Fast vision processing
+- **Claude 3 Opus** (`claude-3-opus-20240229`) - Most capable vision model
+- **Claude 3 Sonnet** (`claude-3-sonnet-20240229`) - Balanced performance
+- **Claude 3 Haiku** (`claude-3-haiku-20240307`) - Fast vision processing
+
+> **📈 Latest Models:** This documentation is updated with the latest available vision models as of 2025. All model names and capabilities are sourced from official provider documentation and LiteLLM compatibility matrix to ensure accuracy and up-to-date information.
 
 ## 📄 Supported File Types
 
