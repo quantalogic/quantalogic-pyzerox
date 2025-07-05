@@ -4,7 +4,9 @@ import { zerox } from "../src";
 import dotenv from "dotenv";
 import fs from "node:fs";
 import path from "node:path";
-import pLimit from "p-limit";
+
+import pLimit from 'p-limit';
+type Limit = ReturnType<typeof pLimit>;
 
 dotenv.config({ path: path.join(__dirname, "../.env") });
 
@@ -13,11 +15,13 @@ interface TestInput {
   file: string;
 }
 
+
 const FILE_CONCURRENCY = 10;
 const INPUT_DIR = path.join(__dirname, "../../shared/inputs");
 const TEST_JSON_PATH = path.join(__dirname, "../../shared/test.json");
 const OUTPUT_DIR = path.join(__dirname, "results", `test-run-${Date.now()}`);
 const TEMP_DIR = path.join(OUTPUT_DIR, "temp");
+
 
 async function main() {
   const T1 = new Date();
@@ -71,15 +75,21 @@ async function main() {
   );
 
   // Filter out any null results (due to missing files)
+  // @ts-ignore
   const filteredResults = results.filter((result) => result !== null);
+  // @ts-ignore
   const tableData = filteredResults.map((result) => {
+    // @ts-ignore
     const totalFound =
       result?.keywordCounts.reduce(
+        // @ts-ignore
         (sum, page) => sum + page.keywordsFound.length,
         0
       ) ?? 0;
+    // @ts-ignore
     const totalMissing =
       result?.keywordCounts.reduce(
+        // @ts-ignore
         (sum, page) => sum + page.keywordsMissing.length,
         0
       ) ?? 0;
@@ -107,19 +117,25 @@ async function main() {
   const completionTime = ((T2.getTime() - T1.getTime()) / 1000).toFixed(2);
 
   // Calculate overall accuracy and total pages tested
+  // @ts-ignore
   const totalKeywordsFound = filteredResults.reduce(
+    // @ts-ignore
     (sum, result) =>
       sum +
       (result?.keywordCounts?.reduce(
+        // @ts-ignore
         (s, page) => s + (page.keywordsFound?.length ?? 0),
         0
       ) ?? 0),
     0
   );
+  // @ts-ignore
   const totalKeywordsMissing = filteredResults.reduce(
+    // @ts-ignore
     (sum, result) =>
       sum +
       (result?.keywordCounts?.reduce(
+        // @ts-ignore
         (s, page) => s + (page.keywordsMissing?.length ?? 0),
         0
       ) ?? 0),
@@ -131,7 +147,9 @@ async function main() {
       ? ((totalKeywordsFound / totalKeywords) * 100).toFixed(2) + "%"
       : "N/A";
 
+  // @ts-ignore
   const pagesTested = filteredResults.reduce(
+    // @ts-ignore
     (sum, result) => sum + (result?.keywordCounts?.length ?? 0),
     0
   );

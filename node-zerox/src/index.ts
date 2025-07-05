@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import os from "os";
 import path from "path";
-import pLimit from "p-limit";
+import pLimit from 'p-limit';
 import Tesseract from "tesseract.js";
 
 import "./handleWarnings";
@@ -364,10 +364,10 @@ export const zerox = async ({
             }
           }
         } else {
-          const limit = pLimit(concurrency);
+          const limiter = pLimit(concurrency);
           await Promise.all(
             imagePaths.map((imagePath, i) =>
-              limit(() =>
+              limiter(() =>
                 processOCR(imagePath, i, false).then((page) => {
                   pages[i] = page;
                 })
